@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>GENIBOX - Login</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gradient-to-br from-indigo-900 to-blue-900 min-h-screen flex items-center justify-center">
+
+  <div class="bg-white p-8 rounded-2xl shadow-2xl w-full max-w-sm">
+    <h1 class="text-3xl font-bold text-center mb-6 text-blue-800">GENIBOX</h1>
+    <p id="status" class="text-center text-red-500 mb-4"></p>
+
+    <div class="space-y-5">
+      <input id="username" type="text" placeholder="Username" class="w-full border p-3 rounded-lg" />
+      <input id="password" type="password" placeholder="Password" class="w-full border p-3 rounded-lg" />
+
+      <button onclick="login()" class="w-full bg-blue-700 text-white py-3 rounded-lg hover:bg-blue-800">Login</button>
+      <button onclick="signup()" class="w-full border border-blue-700 text-blue-700 py-3 rounded-lg hover:bg-blue-50">Sign Up</button>
+    </div>
+
+    <p class="text-center text-xs text-gray-400 mt-6">© 2025 GENIBOX. Built by Inofomoh Abdulshakur.</p>
+  </div>
+
+  <script>
+    const backend = "https://YOUR_BACKEND_URL";
+    function saveUser(username) {
+      localStorage.setItem('username', username);
+      window.location = 'app.html';
+    }
+
+    async function login() {
+      const res = await fetch(backend + "/login", {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({
+          username: document.getElementById('username').value,
+          password: document.getElementById('password').value
+        })
+      });
+      if (res.ok) {
+        saveUser(document.getElementById('username').value);
+      } else {
+        const data = await res.json();
+        document.getElementById('status').innerText = data.detail;
+      }
+    }
+
+    async function signup() {
+      const res = await fetch(backend + "/signup", {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({
+          username: document.getElementById('username').value,
+          password: document.getElementById('password').value
+        })
+      });
+      const data = await res.json();
+      if (res.ok) {
+        document.getElementById('status').innerText = "Signup successful! Please login.";
+      } else {
+        document.getElementById('status').innerText = data.detail;
+      }
+    }
+  </script>
+
+</body>
+</html>
