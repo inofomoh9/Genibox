@@ -1,0 +1,36 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+  <title>GENIBOX</title>
+</head>
+<body>
+  <h1>GENIBOX App Generator</h1>
+
+  <label>App Name: <input id="appname"/></label><br/>
+  <label>Description: <input id="desc"/></label><br/>
+  <label>Pages (comma separated): <input id="pages"/></label><br/><br/>
+
+  <button onclick="generate()">Generate App</button>
+  <a id="download" href="#" style="display:none;">Download Zip</a>
+
+  <script>
+    async function generate() {
+      const res = await fetch('https://YOUR-BACKEND-URL/generate', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({
+          app_name: document.getElementById('appname').value,
+          description: document.getElementById('desc').value,
+          pages: document.getElementById('pages').value.split(',')
+        })
+      });
+      const data = await res.json();
+      const link = document.getElementById('download');
+      link.href = 'https://YOUR-BACKEND-URL/download/' + data.zip_file;
+      link.innerText = 'Download ' + data.zip_file;
+      link.style.display = 'block';
+    }
+  </script>
+</body>
+</html>
